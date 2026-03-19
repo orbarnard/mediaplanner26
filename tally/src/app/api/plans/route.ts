@@ -46,14 +46,8 @@ export async function GET() {
 /**
  * POST /api/plans — Create a new plan
  *
- * Body: {
- *   clientName, clientType, electionType,
- *   startDate, endDate, commissionPct?,
- *   markets?: Array<{ name: string }>
- * }
- *
- * Auto-generates: windowDate, flightLengthDays, flightLengthWeeks,
- * FlightWeek records, and default MediaSection records.
+ * Quick creation: only clientName required. Everything else has sensible defaults.
+ * Dates default to a 12-week general election flight ending Nov 3, 2026.
  */
 export async function POST(request: NextRequest) {
   try {
@@ -61,24 +55,26 @@ export async function POST(request: NextRequest) {
 
     const {
       clientName,
-      clientType,
-      electionType,
+      clientType = 'CANDIDATE',
+      electionType = 'GENERAL',
       startDate: startDateStr,
       endDate: endDateStr,
       commissionPct = 0.15,
       markets = [],
     } = body
 
-    // Validate required fields
-    if (!clientName || !clientType || !electionType || !startDateStr || !endDateStr) {
+    if (!clientName) {
       return NextResponse.json(
-        { error: 'Missing required fields: clientName, clientType, electionType, startDate, endDate' },
+        { error: 'clientName is required' },
         { status: 400 }
       )
     }
 
-    const startDate = new Date(startDateStr)
-    const endDate = new Date(endDateStr)
+    // Default to 12-week flight ending Nov 3, 2026 if no dates provided
+    const endDate = endDateStr ? new Date(endDateStr) : new Date('2026-11-03')
+    const startDate = startDateStr
+      ? new Date(startDateStr)
+      : new Date(new Date(endDate).setDate(endDate.getDate() - 84)) // 12 weeks back
 
     if (endDate <= startDate) {
       return NextResponse.json(
@@ -87,12 +83,10 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Auto-calculate derived fields
     const windowDate = calculateWindowDate(endDate)
     const flightLength = calculateFlightLength(startDate, endDate)
     const flightWeeks = generateFlightWeeks(startDate, endDate)
 
-    // Create plan with all related records in a transaction
     const plan = await prisma.$transaction(async (tx) => {
       const newPlan = await tx.plan.create({
         data: {
@@ -105,14 +99,12 @@ export async function POST(request: NextRequest) {
           flightLengthDays: flightLength.days,
           flightLengthWeeks: flightLength.weeks,
           commissionPct,
-          // Create markets
           markets: {
             create: markets.map((m: { name: string }, index: number) => ({
               name: m.name,
               sortOrder: index,
             })),
           },
-          // Create default media sections
           sections: {
             create: DEFAULT_SECTIONS.map((s) => ({
               name: s.name,
@@ -120,7 +112,6 @@ export async function POST(request: NextRequest) {
               sortOrder: s.sortOrder,
             })),
           },
-          // Create flight weeks
           flightWeeks: {
             create: flightWeeks.map((fw) => ({
               weekNumber: fw.weekNumber,
