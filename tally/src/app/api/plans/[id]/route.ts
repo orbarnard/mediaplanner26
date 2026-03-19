@@ -128,6 +128,27 @@ export async function PUT(
         })
       }
 
+      // Add a market
+      if (body.addMarket) {
+        const maxSort = await tx.market.findFirst({
+          where: { planId: id },
+          orderBy: { sortOrder: 'desc' },
+          select: { sortOrder: true },
+        })
+        await tx.market.create({
+          data: {
+            planId: id,
+            name: body.addMarket.name,
+            sortOrder: (maxSort?.sortOrder ?? -1) + 1,
+          },
+        })
+      }
+
+      // Remove a market
+      if (body.removeMarketId) {
+        await tx.market.delete({ where: { id: body.removeMarketId } })
+      }
+
       const updated = await tx.plan.update({
         where: { id },
         data: updateData,
