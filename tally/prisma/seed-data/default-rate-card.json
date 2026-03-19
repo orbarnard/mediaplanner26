@@ -1,0 +1,146 @@
+[
+  {
+    "marketName": "Market A",
+    "section": "english_broadcast",
+    "cppQ3OOW": 100,
+    "cppQ3IW": 200,
+    "cppEarlyQ4": 300,
+    "cppLateQ4": 400
+  },
+  {
+    "marketName": "Market B",
+    "section": "english_broadcast",
+    "cppQ3OOW": 100,
+    "cppQ3IW": 200,
+    "cppEarlyQ4": 300,
+    "cppLateQ4": 400
+  },
+  {
+    "marketName": "Market C",
+    "section": "english_broadcast",
+    "cppQ3OOW": 100,
+    "cppQ3IW": 200,
+    "cppEarlyQ4": 300,
+    "cppLateQ4": 400
+  },
+  {
+    "marketName": "Market D",
+    "section": "english_broadcast",
+    "cppQ3OOW": 100,
+    "cppQ3IW": 200,
+    "cppEarlyQ4": 300,
+    "cppLateQ4": 400
+  },
+  {
+    "marketName": "Market E",
+    "section": "english_broadcast",
+    "cppQ3OOW": 100,
+    "cppQ3IW": 200,
+    "cppEarlyQ4": 300,
+    "cppLateQ4": 400
+  },
+  {
+    "marketName": "Market F",
+    "section": "english_broadcast",
+    "cppQ3OOW": 100,
+    "cppQ3IW": 200,
+    "cppEarlyQ4": 300,
+    "cppLateQ4": 400
+  },
+  {
+    "marketName": "Market A",
+    "section": "spanish_tv",
+    "cppQ3OOW": 100,
+    "cppQ3IW": 100,
+    "cppEarlyQ4": 100,
+    "cppLateQ4": 200
+  },
+  {
+    "marketName": "Market B",
+    "section": "spanish_tv",
+    "cppQ3OOW": 100,
+    "cppQ3IW": 100,
+    "cppEarlyQ4": 100,
+    "cppLateQ4": 200
+  },
+  {
+    "marketName": "Market C",
+    "section": "spanish_tv",
+    "cppQ3OOW": 100,
+    "cppQ3IW": 100,
+    "cppEarlyQ4": 100,
+    "cppLateQ4": 200
+  },
+  {
+    "marketName": "Market D",
+    "section": "spanish_tv",
+    "cppQ3OOW": 100,
+    "cppQ3IW": 100,
+    "cppEarlyQ4": 100,
+    "cppLateQ4": 200
+  },
+  {
+    "marketName": "Market E",
+    "section": "spanish_tv",
+    "cppQ3OOW": 100,
+    "cppQ3IW": 100,
+    "cppEarlyQ4": 100,
+    "cppLateQ4": 200
+  },
+  {
+    "marketName": "Market F",
+    "section": "spanish_tv",
+    "cppQ3OOW": 100,
+    "cppQ3IW": 100,
+    "cppEarlyQ4": 100,
+    "cppLateQ4": 200
+  },
+  {
+    "marketName": "Team / Game / League",
+    "section": "broadcast_sports",
+    "cppQ3OOW": 100,
+    "cppQ3IW": 100,
+    "cppEarlyQ4": 100,
+    "cppLateQ4": 100
+  },
+  {
+    "marketName": "Team / Game / League",
+    "section": "broadcast_sports",
+    "cppQ3OOW": 100,
+    "cppQ3IW": 100,
+    "cppEarlyQ4": 100,
+    "cppLateQ4": 100
+  },
+  {
+    "marketName": "Team / Game / League",
+    "section": "broadcast_sports",
+    "cppQ3OOW": 100,
+    "cppQ3IW": 100,
+    "cppEarlyQ4": 100,
+    "cppLateQ4": 100
+  },
+  {
+    "marketName": "Team / Game / League",
+    "section": "broadcast_sports",
+    "cppQ3OOW": 100,
+    "cppQ3IW": 100,
+    "cppEarlyQ4": 100,
+    "cppLateQ4": 100
+  },
+  {
+    "marketName": "Team / Game / League",
+    "section": "broadcast_sports",
+    "cppQ3OOW": 100,
+    "cppQ3IW": 100,
+    "cppEarlyQ4": 100,
+    "cppLateQ4": 100
+  },
+  {
+    "marketName": "Team / Game / League",
+    "section": "broadcast_sports",
+    "cppQ3OOW": 100,
+    "cppQ3IW": 100,
+    "cppEarlyQ4": 100,
+    "cppLateQ4": 100
+  }
+]

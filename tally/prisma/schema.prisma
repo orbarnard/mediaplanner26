@@ -1,0 +1,210 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum ClientType {
+  CANDIDATE
+  ISSUE_ADVOCACY
+  PAC
+}
+
+enum ElectionType {
+  PRIMARY
+  GENERAL
+}
+
+enum PlanStatus {
+  DRAFT
+  IN_REVIEW
+  APPROVED
+}
+
+enum SectionType {
+  BROADCAST_TV
+  SPANISH_TV
+  CABLE
+  RADIO
+  DIGITAL_OTT
+  DISPLAY
+  STREAMING
+}
+
+enum PlatformType {
+  CTV_OTT
+  YOUTUBE
+  META
+  AUDIO
+  VOD
+  TIKTOK
+  OTHER
+}
+
+enum SharePermission {
+  VIEW
+  COMMENT
+  APPROVE
+}
+
+model Plan {
+  id               String       @id @default(cuid())
+  clientName       String
+  clientType       ClientType
+  electionType     ElectionType
+  isElectionWeek   Boolean      @default(false)
+  startDate        DateTime
+  endDate          DateTime
+  windowDate       DateTime
+  flightLengthDays  Int
+  flightLengthWeeks Int
+  commissionPct    Float        @default(0.15)
+  status           PlanStatus   @default(DRAFT)
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+
+  markets     Market[]
+  sections    MediaSection[]
+  flightWeeks FlightWeek[]
+  shareTokens ShareToken[]
+}
+
+model Market {
+  id              String @id @default(cuid())
+  planId          String
+  name            String
+  districtVotePct Float?
+  hispanicPct     Float?
+
+  cppQ3OOW_A35   Float?
+  cppQ3IW_A35    Float?
+  cppEarlyQ4_A35 Float?
+  cppLateQ4_A35  Float?
+
+  cppQ3OOW_H25   Float?
+  cppQ3IW_H25    Float?
+  cppEarlyQ4_H25 Float?
+  cppLateQ4_H25  Float?
+
+  sortOrder Int @default(0)
+
+  plan      Plan       @relation(fields: [planId], references: [id], onDelete: Cascade)
+  lineItems LineItem[]
+
+  @@index([planId])
+}
+
+model MediaSection {
+  id        String      @id @default(cuid())
+  planId    String
+  name      String
+  type      SectionType
+  sortOrder Int         @default(0)
+
+  plan      Plan       @relation(fields: [planId], references: [id], onDelete: Cascade)
+  lineItems LineItem[]
+
+  @@index([planId])
+}
+
+model LineItem {
+  id               String  @id @default(cuid())
+  sectionId        String
+  marketId         String?
+  tacticName       String
+  audienceDemo     String?
+  adServingEnabled Boolean @default(false)
+  reachEstimate    Float?
+  frequency        Float?
+  notes            String?
+  sortOrder        Int     @default(0)
+
+  section    MediaSection       @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+  market     Market?            @relation(fields: [marketId], references: [id], onDelete: SetNull)
+  weekValues LineItemWeekValue[]
+
+  @@index([sectionId])
+  @@index([marketId])
+}
+
+model FlightWeek {
+  id         String   @id @default(cuid())
+  planId     String
+  weekNumber Int
+  startDate  DateTime
+  endDate    DateTime
+  label      String
+  isLocked   Boolean  @default(false)
+
+  plan       Plan              @relation(fields: [planId], references: [id], onDelete: Cascade)
+  weekValues LineItemWeekValue[]
+
+  @@index([planId])
+}
+
+model LineItemWeekValue {
+  id                 String @id @default(cuid())
+  lineItemId         String
+  flightWeekId       String
+
+  plannedPoints      Float?
+  plannedImpressions Float?
+  plannedCost        Float  @default(0)
+
+  actualPoints       Float?
+  actualImpressions  Float?
+  actualCost         Float?
+
+  lineItem   LineItem   @relation(fields: [lineItemId], references: [id], onDelete: Cascade)
+  flightWeek FlightWeek @relation(fields: [flightWeekId], references: [id], onDelete: Cascade)
+
+  @@unique([lineItemId, flightWeekId])
+  @@index([lineItemId])
+  @@index([flightWeekId])
+}
+
+model DigitalTactic {
+  id           String       @id @default(cuid())
+  searchKey    String
+  displayName  String
+  platform     String?
+  adLength     String?
+  cpm          Float
+  servingCpm   Float?
+  platformType PlatformType @default(OTHER)
+}
+
+model AudienceProfile {
+  id                  String  @id @default(cuid())
+  searchKey           String
+  geography           String?
+  audienceName        String
+  language            String?
+  listSize            Int?
+  url                 String?
+  coverageTvStreaming Float?
+  coverageYoutube    Float?
+  coverageYoutubeTV  Float?
+  coverageMeta       Float?
+  coverageAudio      Float?
+  coverageVod        Float?
+  coverageDigital    Float?
+}
+
+model ShareToken {
+  id          String          @id @default(cuid())
+  planId      String
+  token       String          @unique @default(uuid())
+  expiresAt   DateTime
+  permissions SharePermission @default(VIEW)
+  createdAt   DateTime        @default(now())
+  usedAt      DateTime?
+
+  plan Plan @relation(fields: [planId], references: [id], onDelete: Cascade)
+
+  @@index([planId])
+  @@index([token])
+}
